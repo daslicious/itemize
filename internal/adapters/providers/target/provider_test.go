@@ -699,3 +699,12 @@ func TestOrderDateIsLocalDay(t *testing.T) {
 	assert.Equal(t, time.Date(2026, 8, 5, 0, 0, 0, 0, time.UTC), orderDate("2026-08-06T01:09:52.000Z"))
 	assert.True(t, orderDate("not a date").IsZero())
 }
+
+// TestMain pins the local zone: order dates are the day as seen where itemize runs, so the
+// expected dates in these tests depend on it.
+func TestMain(m *testing.M) {
+	if loc, err := time.LoadLocation("America/Denver"); err == nil {
+		time.Local = loc
+	}
+	os.Exit(m.Run())
+}
